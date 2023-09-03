@@ -1,10 +1,10 @@
-# Django Advanced TODO.
+# Django Advanced TODO
 
 [![Tests](https://github.com/kirillzhosul/django-advanced-todo/actions/workflows/tests.yml/badge.svg)](https://github.com/kirillzhosul/advanced-todo/actions/workflows/tests.yml) \
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Test task for one of the companies. Django REST TODO on steroids with metrics and subtasks. \
-Main goal is to simple TODO (REST API) with metrics (analytics) and also stuff like sub-tasks, completion and tracking
+Main goal is to todo simple TODO (REST API) with metrics (analytics) and also stuff like sub-tasks, completion and tracking
 
 ## How to try project?
 
