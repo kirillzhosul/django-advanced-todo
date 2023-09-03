@@ -25,6 +25,8 @@ Project uses Docker, to run use:
 - `git clone https://github.com/kirillzhosul/django-advanced-todo.git`
 - `cd django-advanced-todo/src`
 - `cp .example.server.env .server.env`
+- `cp .example.database.env .database.env`
+- `cp .example.env .env`
 - `docker-compose up`.
   This will run Docker, Database and server with Gunicorn!
   (Please notice to copy)
