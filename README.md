@@ -9,14 +9,20 @@ Main goal is to todo simple TODO (REST API) with metrics (analytics) and also st
 ## How to try project?
 
 Project is being deployed to staging. You can try project [here](https://kirillzhosul.florgon.com/tests/api/todo) (Click!)
-Test user:
-
-- Login: exampleuser
-- Password: examplepassword
 
 ## Methods?
 
-TBD
+TBD: Document annotations
+
+- POST `/tokens/login` (password, username)
+- POST `/tokens/signup` (password, username)
+- GET `/tokens/info`
+- GET|POST|DELETE|PATCH `/tasks`
+- GET `/tasks/metrics`
+
+# Authorization
+
+Pass `Authorization` header as `Token {YOUR_TOKEN_FROM_AUTH}`
 
 ## How to run?
 
