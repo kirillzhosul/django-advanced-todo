@@ -1,7 +1,7 @@
 from django.db.models import Count
 from django.contrib.auth.models import User
 
-from tasks.serializers import KPISerializer, CategoryKPISerializer
+from tasks.serializers import KPISerializer
 from tasks.models import Task
 
 
@@ -14,6 +14,7 @@ def get_asignee_kpi(asignee: User) -> dict:
 
 
 def get_categories_kpi() -> dict[str, KPISerializer]:
+    # TODO: Rework with single one query to the database, add time tracking
     return {
         category: _get_category_kpi(category).data
         for category in [
@@ -34,6 +35,7 @@ def _get_category_kpi(category: str) -> KPISerializer:
 
 
 def _get_kpi_data(completed_tasks, uncompleted_tasks) -> dict:
+    # Weird mess
     total_tasks = completed_tasks + uncompleted_tasks
     task_completion_kpi = (
         0 if completed_tasks == 0 else uncompleted_tasks / completed_tasks
