@@ -14,6 +14,9 @@ jobs:
     name: Tests
     steps:
       - uses: actions/checkout@v3
+      - name: Use default configuration
+        working-directory: ./src
+        run: cp .example.server.env .server.env && cp .example.database.env .database.env && cp .example.env .env
       - name: Build containers (Docker-Compose)
         working-directory: ./src
         run: docker-compose up -d --build
