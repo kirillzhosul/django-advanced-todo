@@ -8,9 +8,10 @@ from rest_framework.decorators import permission_classes, api_view
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
+from tasks.services.parent import get_parent_by_id_or_none
 from tasks.services.kpi import get_categories_kpi, get_asignee_kpi
-from tasks.services.asignee import get_parent_by_id_or_none, get_asignee_by_id_or_none
-from tasks.serializers import TaskSerializer, KPISerializer
+from tasks.services.asignee import get_asignee_by_id_or_none
+from tasks.serializers import TaskSerializer
 from tasks.models import Task
 
 
@@ -24,7 +25,7 @@ class TaskView(APIView):
 
         asignee = req.user
         if asignee_id := req.data.get("asignee_id", None):
-            asignee = get_object_or_404(User, id=asignee_id)
+            asignee = get_object_or_404(User, id=asignee_id) if asignee_id else asignee
 
         query = Task.objects.filter(asignee=asignee)
 
@@ -42,12 +43,14 @@ class TaskView(APIView):
         return Response({"tasks": TaskSerializer(tasks, many=True).data})
 
     def post(self, req) -> Response:
+        asignee, _ = get_asignee_by_id_or_none(req, int(req.data.get("asignee_id", -1)))
+        parent, _ = get_parent_by_id_or_none(int(req.data.get("parent_id", 0)))
         task = Task.objects.create(
             title=req.data.get("title", "My task"),
             description=req.data.get("description", "My description"),
             category=req.data.get("description", "default"),
-            asignee=get_asignee_by_id_or_none(req, int(req.data.get("asignee_id", -1))),
-            parent=Task.objects.get(id=req.data.get("parent_id", 0)),
+            asignee=asignee,
+            parent=parent,
         )
         return Response({"task": TaskSerializer(task).data})
 

@@ -1,7 +1,7 @@
 from django.db.models import Count
 from django.contrib.auth.models import User
 
-from tasks.serializers import KPISerializer, CategoryKPISerializer
+from tasks.serializers import KPISerializer
 from tasks.models import Task
 
 

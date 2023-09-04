@@ -12,10 +12,6 @@ class KPISerializer(serializers.Serializer):
     total_tasks = serializers.IntegerField(required=True)
 
 
-class CategoryKPISerializer(KPISerializer):
-    category = serializers.CharField(required=True)
-
-
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
