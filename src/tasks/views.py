@@ -15,7 +15,8 @@ from tasks.models import Task
 
 
 class TaskView(APIView):
-    @permission_classes([IsAuthenticated])
+    permission_classes = [IsAuthenticated]
+
     def get(self, req) -> Response:
         if task_id := req.data.get("task_id"):
             task = get_object_or_404(Task, id=task_id)
@@ -40,7 +41,6 @@ class TaskView(APIView):
         tasks = query.all()
         return Response({"tasks": TaskSerializer(tasks, many=True).data})
 
-    @permission_classes([IsAuthenticated])
     def post(self, req) -> Response:
         task = Task.objects.create(
             title=req.data.get("title", "My task"),
@@ -51,7 +51,6 @@ class TaskView(APIView):
         )
         return Response({"task": TaskSerializer(task).data})
 
-    @permission_classes([IsAuthenticated])
     def patch(self, req) -> Response:
         task = get_object_or_404(Task, id=req.data.get("task_id"))
         asignee, is_asignee_change = get_asignee_by_id_or_none(
@@ -75,7 +74,6 @@ class TaskView(APIView):
 
         return Response({"task": TaskSerializer(task).data, "is_changed": is_changed})
 
-    @permission_classes([IsAuthenticated])
     def delete(self, req) -> Response:
         task_id = req.data.get("task_id")
         task = get_object_or_404(Task, id=task_id)
