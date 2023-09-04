@@ -10,12 +10,7 @@ from django.contrib.auth.models import User
 
 from tasks.services.kpi import get_categories_kpi, get_asignee_kpi
 from tasks.services.asignee import get_parent_by_id_or_none, get_asignee_by_id_or_none
-from tasks.serializers import (
-    TaskSerializer,
-    TaskPostSerializer,
-    TaskPatchSerializer,
-    TaskGetSerializer,
-)
+from tasks.serializers import TaskSerializer, KPISerializer
 from tasks.models import Task
 
 
@@ -23,49 +18,48 @@ class TaskView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, req) -> Response:
-        # TODO: Split into smaller business logic services
-        data = TaskGetSerializer(data=req.data)
-        if not data.is_valid():
-            return Response({"errors": data.errors})
-
-        if data.task_id:
-            task = get_object_or_404(Task, id=data.task_id)
+        if task_id := req.data.get("task_id"):
+            task = get_object_or_404(Task, id=task_id)
             return Response({"task": TaskSerializer(task).data})
 
-        asignee = (
-            get_object_or_404(User, id=data.asignee_id) if data.asignee_id else req.user
-        )
+        asignee = req.user
+        if asignee_id := req.data.get("asignee_id", None):
+            asignee = get_object_or_404(User, id=asignee_id)
+
         query = Task.objects.filter(asignee=asignee)
 
-        query = query.filter(priority=data.priority) if data.priority else query
-        query = query.filter(category=data.category) if data.category else query
-        query = query.order_by(data.order_by) if data.order_by else query
+        if priority := req.data.get("priority"):
+            query = query.filter(priority=priority)
+
+        if category := req.data.get("category"):
+            query = query.filter(category=category)
+
+        if order_by := req.data.get("sort_by"):
+            if order_by in ("-priority", "priority"):
+                query = query.order_by(order_by)
 
         tasks = query.all()
         return Response({"tasks": TaskSerializer(tasks, many=True).data})
 
     def post(self, req) -> Response:
-        data = TaskPostSerializer(data=req.data)
-        if not data.is_valid():
-            return Response({"errors": data.errors})
         task = Task.objects.create(
-            title=data.title,
-            description=data.description,
-            category=data.category,
-            asignee=get_asignee_by_id_or_none(req, data.asignee_id),
-            parent=Task.objects.get(id=data.parent_id),
+            title=req.data.get("title", "My task"),
+            description=req.data.get("description", "My description"),
+            category=req.data.get("description", "default"),
+            asignee=get_asignee_by_id_or_none(req, int(req.data.get("asignee_id", -1))),
+            parent=Task.objects.get(id=req.data.get("parent_id", 0)),
         )
         return Response({"task": TaskSerializer(task).data})
 
     def patch(self, req) -> Response:
-        # TODO: Rework with not mess solution
-        data = TaskPatchSerializer(data=req.data)
-        if not data.is_valid():
-            return Response({"errors": data.errors})
-        task = get_object_or_404(Task, id=data.task_id)
-        asignee, is_asignee_change = get_asignee_by_id_or_none(req, data.asignee_id)
+        task = get_object_or_404(Task, id=req.data.get("task_id"))
+        asignee, is_asignee_change = get_asignee_by_id_or_none(
+            req, int(req.data.get("asignee_id", "-1"))
+        )
         is_changed = False
-        parent, is_parent_change = get_parent_by_id_or_none(data.parent_id)
+        parent, is_parent_change = get_parent_by_id_or_none(
+            int(req.data.get("parent_id", "0"))
+        )
 
         if is_asignee_change:
             task.asignee = asignee
@@ -91,7 +85,6 @@ class TaskView(APIView):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def kpi_efficiency(req) -> Response:
-    # TODO: Rework with not mess solution
     if asignee_id := req.data.get("asignee_id", None):
         asignee = (
             req.user if asignee_id == "-1" else get_object_or_404(User, id=asignee_id)

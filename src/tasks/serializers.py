@@ -2,12 +2,18 @@ from rest_framework import serializers
 
 from tasks.models import Task
 
+# MUST be changed. MUST!
+
 
 class KPISerializer(serializers.Serializer):
     task_completion_kpi = serializers.FloatField(required=True)
     completed_tasks = serializers.IntegerField(required=True)
     uncompleted_tasks = serializers.IntegerField(required=True)
     total_tasks = serializers.IntegerField(required=True)
+
+
+class CategoryKPISerializer(KPISerializer):
+    category = serializers.CharField(required=True)
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -38,27 +44,3 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def get_childrens(self, obj):
         return TaskSerializer(obj.task_set, many=True).data
-
-
-class TaskPostSerializer(serializers.Serializer):
-    asignee_id = serializers.IntegerField(required=False, default=-1)
-    parent_id = serializers.IntegerField(required=False, default=0)
-    category = serializers.CharField(required=False, default="default")
-    priority = serializers.IntegerField(required=False, default=1)
-    description = serializers.CharField(required=False, default="My description")
-    title = serializers.CharField(required=False, default="My title")
-
-
-class TaskPatchSerializer(TaskPostSerializer):
-    task_id = serializers.IntegerField(required=True)
-    category = serializers.CharField(required=False, default=None)
-    description = serializers.CharField(required=False, default=None)
-    title = serializers.CharField(required=False, default=None)
-
-
-class TaskGetSerializer(serializers.Serializer):
-    task_id = serializers.IntegerField(required=False, default=None)
-    asignee_id = serializers.IntegerField(required=False, default=None)
-    category = serializers.CharField(required=False, default=None)
-    priority = serializers.IntegerField(required=False, default=1)
-    order_by = serializers.ChoiceField(["-priority", "priority"], required=False)

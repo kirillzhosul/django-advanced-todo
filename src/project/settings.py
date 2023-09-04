@@ -26,9 +26,9 @@ env = Env(
     # Application.
     URL_PREFIX=(str, ""),
 )
+
 # Application.
 URL_PREFIX = env("URL_PREFIX")
-APPEND_SLASH = False
 
 # Django settings.
 DEBUG = env("DEBUG")
