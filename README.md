@@ -8,7 +8,7 @@ Main goal is to todo simple TODO (REST API) with metrics (analytics) and also st
 
 ## How to try project?
 
-Project is being deployed to staging. You can try project [here](https://kirillzhosul.florgon.com/tests/api/todo) (Click!)
+Project is being deployed to staging. You can try project [here](https://staging.florgon.com/tests/api/todo/tasks/) (Click!)
 
 ## Methods?
 
@@ -41,6 +41,7 @@ Project uses Docker, to run use:
 
 Currently in staging, static files is being served by Ngninx (plus Django `collectstatic`)
 On the development, static files is avaliable when using django `runserver`
+(Used only for admin page for now)
 
 #### Migrations?
 
@@ -73,4 +74,4 @@ Run `docker exec -it django-advanced-todo-1 /bin/sh` and then `python manage.py 
 
 ## References.
 
-- [Deployed version](https://kirillzhosul.florgon.com/tests/api/todo)
+- [Deployed version](https://staging.florgon.com/tests/api/todo/)
