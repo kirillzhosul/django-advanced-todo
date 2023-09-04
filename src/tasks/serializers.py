@@ -50,15 +50,15 @@ class TaskPostSerializer(serializers.Serializer):
 
 
 class TaskPatchSerializer(TaskPostSerializer):
-    task_id = serializers.IntegerField(required=True)
-    category = serializers.CharField(required=False)
-    description = serializers.CharField(required=False)
-    title = serializers.CharField(required=False)
+    task_id = serializers.IntegerField(required=True, default=None)
+    category = serializers.CharField(required=False, default=None)
+    description = serializers.CharField(required=False, default=None)
+    title = serializers.CharField(required=False, default=None)
 
 
 class TaskGetSerializer(serializers.Serializer):
-    task_id = serializers.IntegerField(required=False)
-    asignee_id = serializers.IntegerField(required=False)
-    category = serializers.CharField(required=False)
+    task_id = serializers.IntegerField(required=False, default=None)
+    asignee_id = serializers.IntegerField(required=False, default=None)
+    category = serializers.CharField(required=False, default=None)
     priority = serializers.IntegerField(required=False, default=1)
     order_by = serializers.ChoiceField(["-priority", "priority"], required=False)
