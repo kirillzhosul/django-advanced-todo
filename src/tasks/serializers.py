@@ -50,7 +50,7 @@ class TaskPostSerializer(serializers.Serializer):
 
 
 class TaskPatchSerializer(TaskPostSerializer):
-    task_id = serializers.IntegerField(required=True, default=None)
+    task_id = serializers.IntegerField(required=True)
     category = serializers.CharField(required=False, default=None)
     description = serializers.CharField(required=False, default=None)
     title = serializers.CharField(required=False, default=None)
