@@ -4,10 +4,9 @@
     Some stuff are may be removed due to not being used.
 """
 
-import os
 from pathlib import Path
 
-from environ import Env
+from environ import Env  # type: ignore
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,7 +42,8 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Django modules.
 INSTALLED_APPS = [
-    # "shop.apps.ShopConfig",
+    "tasks.apps.TasksConfig",
+    "tokens.apps.TokensConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -61,6 +62,13 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+}
 
 # Templates.
 TEMPLATES = [

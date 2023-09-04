@@ -1,3 +1,3 @@
 """
-    Root project application.
+    Advanced Django To-Do project.
 """
